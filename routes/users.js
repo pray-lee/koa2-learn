@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-
+const Person = require('../dbs/model/person')
 router.prefix('/users')
 
 router.get('/', function (ctx, next) {
@@ -8,6 +8,35 @@ router.get('/', function (ctx, next) {
 
 router.get('/bar', function (ctx, next) {
   ctx.body = 'this is a users/bar response'
+})
+
+//测试mongodb数据库接口, 写数据,使用的是新增的person实例
+router.post('/addPerson', async function (ctx, next) {
+  const person = new Person({
+    name: ctx.request.body.name,
+    age: ctx.request.body.age
+  })
+  let code
+  try {
+    await person.save()
+    code = 0
+  } catch (e) {
+    code = -1
+  }
+  ctx.body = {
+    code
+  }
+})
+
+// mongodb 读数据, 使用Person的静态方法
+router.post('/getPerson', async (ctx, next) => {
+  const result = await Person.findOne({name: ctx.request.body.name})
+  const results = await Person.find({name: ctx.request.body.name})
+  ctx.body = {
+    code: 0,
+    result,
+    results
+  }
 })
 
 module.exports = router
