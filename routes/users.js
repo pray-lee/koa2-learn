@@ -39,4 +39,29 @@ router.post('/getPerson', async (ctx, next) => {
   }
 })
 
+//mongodb 修改数据
+router.post('/updatePerson', async (ctx, next) => {
+  console.log(Person.where({name: ctx.request.body.name}))
+  await Person.where({
+    name: ctx.request.body.name
+  }).update({
+    age: ctx.request.body.age
+  })
+  ctx.body = {
+    code: 0,
+    result:"update success"
+  }
+})
+
+// mongodb 删除数据
+router.post('/removePerson', async (ctx, next) => {
+  await Person.where({
+    name: ctx.request.body.name
+  }).remove()
+
+  ctx.body = {
+  code: 0,
+  result:"remove success"
+  }
+})
 module.exports = router
