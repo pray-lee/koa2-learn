@@ -1,5 +1,11 @@
 const router = require('koa-router')()
 const Person = require('../dbs/model/person')
+
+//创建redis客户端
+const Redis = require('koa-redis')
+const Store = new Redis().client
+
+// 给路由加前缀
 router.prefix('/users')
 
 router.get('/', function (ctx, next) {
@@ -8,6 +14,15 @@ router.get('/', function (ctx, next) {
 
 router.get('/bar', function (ctx, next) {
   ctx.body = 'this is a users/bar response'
+})
+
+//
+router.get('/fix', async (ctx, next) => {
+  await Store.hset('fix', 'name', Math.random())
+  ctx.body = {
+    code: 0,
+    result: 'set redis key-value success'
+  }
 })
 
 //测试mongodb数据库接口, 写数据,使用的是新增的person实例

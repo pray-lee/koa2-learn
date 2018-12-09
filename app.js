@@ -12,8 +12,23 @@ const users = require('./routes/users')
 // database mongodb
 const mongoose = require('mongoose')
 const dbConfig = require('./dbs/config')
+
+//session
+const session = require('koa-generic-session')
+
+//redis
+const Redis = require('koa-redis')
+
 // error handler
 onerror(app)
+
+// session相关
+app.keys = ['key', 'keyskeys']
+app.use(session({
+  key: 'session_lee',
+  prefix: 'session_prefix_lee',
+  store: new Redis()
+}))
 
 // middlewares
 app.use(bodyparser({
@@ -41,9 +56,9 @@ app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 
 // connect mongodb
-mongoose.connect(dbConfig.dbs, {
-  useNewUrlParser: true
-})
+// mongoose.connect(dbConfig.dbs, {
+//   useNewUrlParser: true
+// })
 
 // error-handling
 app.on('error', (err, ctx) => {
