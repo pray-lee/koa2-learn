@@ -16,7 +16,7 @@ router.get('/bar', function (ctx, next) {
   ctx.body = 'this is a users/bar response'
 })
 
-//
+// redis里面设置key-value的值
 router.get('/fix', async (ctx, next) => {
   await Store.hset('fix', 'name', Math.random())
   ctx.body = {
