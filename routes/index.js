@@ -17,3 +17,4 @@ router.get('/json', async (ctx, next) => {
 })
 
 module.exports = router
+console.log(1)
